@@ -2,6 +2,8 @@
 import { Button } from 'antd'
 // import { ShoppingCartOutlined } from '@ant-design/icons'
 
+import { resetAllStores } from './helpers/create'
+
 // import { useCoffeeStore } from './model/coffeeStore'
 import { useCounterStore } from './model/counterStore'
 import { useTodoStore } from './model/todoStore'
@@ -12,7 +14,7 @@ function App() {
 	// const [text, setText] = useState('')
 
 	// const { getCoffeeList, coffeeList } = useCoffeeStore()
-	const { increment, decrement, resetStore, counter, persistedCounter } =
+	const { increment, decrement, counter, persistedCounter } =
 		useCounterStore()
 	const { todos, addTodo } = useTodoStore()
 
@@ -32,7 +34,7 @@ function App() {
 			<span>{persistedCounter}</span>
 			<Button onClick={decrement}>-</Button>
 
-			<Button onClick={resetStore}>reset</Button>
+			<Button onClick={resetAllStores}>reset</Button>
 
 			<Button onClick={() => addTodo('Some')}>addTodo</Button>
 

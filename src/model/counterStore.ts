@@ -1,5 +1,7 @@
-import { create, StateCreator } from 'zustand'
+import { StateCreator } from 'zustand'
 import { persist } from 'zustand/middleware'
+
+import { create } from '../helpers/create'
 
 type CounterState = {
 	counter: number
