@@ -1,37 +1,51 @@
-import { Card, Checkbox, Input } from 'antd'
+import { useEffect, useState } from 'react'
+import { Button, Card, Rate, Tag, Input } from 'antd'
+import { ShoppingCartOutlined } from '@ant-design/icons'
 
-import { useTodoStore } from './model/todoStore'
+import { useCoffeeStore } from './model/coffeeStore'
 
 import './App.css'
-import { useState } from 'react'
 
 function App() {
-	const { todos, addTodo, changeIsComplete } = useTodoStore()
+	const [text, setText] = useState('')
 
-	const [value, setValue] = useState('')
+	const { getCoffeeList, coffeeList } = useCoffeeStore()
+
+	const handleSearch = (text: string) => {
+		getCoffeeList({ text })
+		setText(text)
+	}
+
+	useEffect(() => {
+		getCoffeeList()
+	}, [])
 
 	return (
 		<div className='wrapper'>
 			<Input
-				style={{ width: 300 }}
-				onChange={(e) => setValue(e.target.value)}
-				value={value}
-				onKeyDown={(e) => {
-					if (e.key === 'Enter') {
-						addTodo(value)
-						setValue('')
-					}
-				}}
+				value={text}
+				placeholder='Поиск'
+				onChange={(e) => handleSearch(e.target.value)}
 			/>
-			{todos.map((todo, index) => (
-				<Card key={`${todo.title}_${index}`} className='cardsContainer'>
-					<Checkbox
-						checked={todo.isComplete}
-						onChange={() => changeIsComplete(index)}
-					/>
-					<span>{todo.title}</span>
-				</Card>
-			))}
+
+			<div className='cardsContainer'>
+				{coffeeList &&
+					coffeeList.map((coffee, index) => (
+						<Card
+							key={`${coffee.id}_${index}`}
+							cover={<img src={coffee.image} alt={coffee.name} />}
+							actions={[
+								<Button icon={<ShoppingCartOutlined />}>{coffee.price}</Button>
+							]}
+						>
+							<Card.Meta title={coffee.name} description={coffee.subTitle} />
+							<Tag color='purple' style={{ marginTop: 12 }}>
+								{coffee.type}
+							</Tag>
+							<Rate defaultValue={coffee.rating} disabled allowHalf />
+						</Card>
+					))}
+			</div>
 		</div>
 	)
 }
