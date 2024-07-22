@@ -1,4 +1,5 @@
 import { create, StateCreator } from 'zustand'
+import { devtools } from 'zustand/middleware'
 
 export type TodoType = {
 	title: string
@@ -14,7 +15,10 @@ type TodoActions = {
 	changeIsComplete: (index: number) => void
 }
 
-const todoSlice: StateCreator<TodoState & TodoActions> = (set, get) => ({
+const todoSlice: StateCreator<
+	TodoState & TodoActions,
+	[['zustand/devtools', never]]
+> = (set, get) => ({
 	todos: [],
 	addTodo: (value: string) => {
 		const { todos } = get()
@@ -31,4 +35,6 @@ const todoSlice: StateCreator<TodoState & TodoActions> = (set, get) => ({
 	}
 })
 
-export const useTodoStore = create<TodoState & TodoActions>(todoSlice)
+export const useTodoStore = create<TodoState & TodoActions>()(
+	devtools(todoSlice)
+)
