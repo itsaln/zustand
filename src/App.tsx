@@ -1,72 +1,89 @@
-// import { useEffect, useState } from 'react'
-import { Button } from 'antd'
-// import { ShoppingCartOutlined } from '@ant-design/icons'
+import { useEffect, useState } from 'react'
+import { Button, Card, Input, Rate, Tag } from 'antd'
+import { ShoppingCartOutlined } from '@ant-design/icons'
 
-import { resetAllStores } from './helpers/create'
-
-// import { useCoffeeStore } from './model/coffeeStore'
-import { useCounterStore } from './model/counterStore'
-import { useTodoStore } from './model/todoStore'
+import { useCoffeeStore } from './model/coffeeStore'
 
 import './App.css'
 
 function App() {
-	// const [text, setText] = useState('')
+	const [text, setText] = useState('')
 
-	// const { getCoffeeList, coffeeList } = useCoffeeStore()
-	const { increment, decrement, counter, persistedCounter } =
-		useCounterStore()
-	const { todos, addTodo } = useTodoStore()
+	const {
+		getCoffeeList,
+		coffeeList,
+		addToCart,
+		cart,
+		orderCoffee,
+		clearCart,
+		address,
+		setAddress
+	} = useCoffeeStore()
 
-	// const handleSearch = (text: string) => {
-	// 	getCoffeeList({ text })
-	// 	setText(text)
-	// }
+	const handleSearch = (text: string) => {
+		getCoffeeList({ text })
+		setText(text)
+	}
 
-	// useEffect(() => {
-	// 	getCoffeeList()
-	// }, [])
+	useEffect(() => {
+		getCoffeeList()
+	}, [])
 
 	return (
 		<div className='wrapper'>
-			<Button onClick={increment}>+</Button>
-			<span>{counter}</span>
-			<span>{persistedCounter}</span>
-			<Button onClick={decrement}>-</Button>
+			<Input
+				value={text}
+				placeholder='Поиск'
+				onChange={(e) => handleSearch(e.target.value)}
+			/>
 
-			<Button onClick={resetAllStores}>reset</Button>
+			<div style={{ display: 'flex' }}>
+				<div className='cardsContainer'>
+					{coffeeList &&
+						coffeeList.map((coffee, index) => (
+							<Card
+								key={`${coffee.id}_${index}`}
+								cover={<img src={coffee.image} alt={coffee.name} />}
+								actions={[
+									<Button
+										icon={<ShoppingCartOutlined />}
+										onClick={() => addToCart(coffee)}
+									>
+										{coffee.price}
+									</Button>
+								]}
+							>
+								<Card.Meta title={coffee.name} description={coffee.subTitle} />
+								<Tag color='purple' style={{ marginTop: 12 }}>
+									{coffee.type}
+								</Tag>
+								<Rate defaultValue={coffee.rating} disabled allowHalf />
+							</Card>
+						))}
+				</div>
 
-			<Button onClick={() => addTodo('Some')}>addTodo</Button>
-
-			{todos &&
-				todos.map((todo, index) => (
-					<span key={`${todo.title}_${index}`}>{todo.title}</span>
-				))}
-
-			{/*<Input*/}
-			{/*	value={text}*/}
-			{/*	placeholder='Поиск'*/}
-			{/*	onChange={(e) => handleSearch(e.target.value)}*/}
-			{/*/>*/}
-
-			{/*<div className='cardsContainer'>*/}
-			{/*	{coffeeList &&*/}
-			{/*		coffeeList.map((coffee, index) => (*/}
-			{/*			<Card*/}
-			{/*				key={`${coffee.id}_${index}`}*/}
-			{/*				cover={<img src={coffee.image} alt={coffee.name} />}*/}
-			{/*				actions={[*/}
-			{/*					<Button icon={<ShoppingCartOutlined />}>{coffee.price}</Button>*/}
-			{/*				]}*/}
-			{/*			>*/}
-			{/*				<Card.Meta title={coffee.name} description={coffee.subTitle} />*/}
-			{/*				<Tag color='purple' style={{ marginTop: 12 }}>*/}
-			{/*					{coffee.type}*/}
-			{/*				</Tag>*/}
-			{/*				<Rate defaultValue={coffee.rating} disabled allowHalf />*/}
-			{/*			</Card>*/}
-			{/*		))}*/}
-			{/*</div>*/}
+				<aside className='cart'>
+					<h1>Заказ</h1>
+					{cart && cart.length > 0 ? (
+						<>
+							{cart.map((item, index) => (
+								<span key={`${item.id}_${index}`}>{item.name}</span>
+							))}
+							<Input
+								placeholder='Адрес'
+								value={address}
+								onChange={(e) => setAddress(e.target.value)}
+							/>
+							<Button type='primary' onClick={orderCoffee} disabled={!address}>
+								Сделать заказ
+							</Button>
+							<Button onClick={clearCart}>Очистить корзину</Button>
+						</>
+					) : (
+						<span>Добавить нипитки</span>
+					)}
+				</aside>
+			</div>
 		</div>
 	)
 }

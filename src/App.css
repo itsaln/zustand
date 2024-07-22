@@ -1,9 +1,7 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  width: 100%;
   gap: 16px;
-  padding: 24px;
 }
 
 .cardsContainer {
@@ -11,6 +9,15 @@
   padding: 24px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.cart {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  min-height: 100%;
+  padding: 8px;
   gap: 16px;
 }
 
