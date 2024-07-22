@@ -22,7 +22,11 @@ const todoSlice: StateCreator<
 	todos: [],
 	addTodo: (value: string) => {
 		const { todos } = get()
-		set({ todos: [...todos, { title: value, isComplete: false }] })
+		set(
+			{ todos: [...todos, { title: value, isComplete: false }] },
+			false,
+			`add Todo ${value}`
+		)
 	},
 	changeIsComplete: (index: number) => {
 		const { todos } = get()
@@ -31,7 +35,11 @@ const todoSlice: StateCreator<
 			{ ...todos[index], isComplete: !todos[index].isComplete },
 			...todos.slice(index + 1)
 		]
-		set({ todos: newTodos })
+		set(
+			{ todos: newTodos },
+			false,
+			`changeIsComplete ${todos[index].title} to ${newTodos[index].isComplete}`
+		)
 	}
 })
 
