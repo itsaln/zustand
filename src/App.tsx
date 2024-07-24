@@ -3,9 +3,9 @@ import { Button, Card, Input, Rate, Tag } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 
 import { useCoffeeStore } from './model/coffeeStore'
-import { useSearchStore } from './model/searchStore'
 
 import './App.css'
+import { useUrlStorage } from './helpers/useUrlStorage.ts'
 
 function App() {
 	const {
@@ -16,20 +16,22 @@ function App() {
 		orderCoffee,
 		clearCart,
 		address,
-		setAddress
+		setAddress,
+		params,
+		setParams
 	} = useCoffeeStore()
-	const { text, setText } = useSearchStore()
+	useUrlStorage(params, setParams)
 
 	useEffect(() => {
-		getCoffeeList()
+		getCoffeeList(params)
 	}, [])
 
 	return (
 		<div className='wrapper'>
 			<Input
-				value={text}
+				value={params.text}
 				placeholder='Поиск'
-				onChange={(e) => setText(e.target.value)}
+				onChange={(e) => setParams({ text: e.target.value })}
 			/>
 
 			<div style={{ display: 'flex' }}>
