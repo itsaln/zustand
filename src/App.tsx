@@ -1,25 +1,17 @@
 import { useEffect } from 'react'
-import { Button, Card, Input, Rate, Tag } from 'antd'
-import { ShoppingCartOutlined } from '@ant-design/icons'
+import { Input } from 'antd'
+
+import { useUrlStorage } from './helpers/useUrlStorage'
 
 import { useCoffeeStore } from './model/coffeeStore'
 
+import { CoffeeCard } from './components/CoffeeCard'
+import { Cart } from './components/Cart'
+
 import './App.css'
-import { useUrlStorage } from './helpers/useUrlStorage.ts'
 
 function App() {
-	const {
-		getCoffeeList,
-		coffeeList,
-		addToCart,
-		cart,
-		orderCoffee,
-		clearCart,
-		address,
-		setAddress,
-		params,
-		setParams
-	} = useCoffeeStore()
+	const { getCoffeeList, coffeeList, params, setParams } = useCoffeeStore()
 	useUrlStorage(params, setParams)
 
 	useEffect(() => {
@@ -38,48 +30,10 @@ function App() {
 				<div className='cardsContainer'>
 					{coffeeList &&
 						coffeeList.map((coffee, index) => (
-							<Card
-								key={`${coffee.id}_${index}`}
-								cover={<img src={coffee.image} alt={coffee.name} />}
-								actions={[
-									<Button
-										icon={<ShoppingCartOutlined />}
-										onClick={() => addToCart(coffee)}
-									>
-										{coffee.price}
-									</Button>
-								]}
-							>
-								<Card.Meta title={coffee.name} description={coffee.subTitle} />
-								<Tag color='purple' style={{ marginTop: 12 }}>
-									{coffee.type}
-								</Tag>
-								<Rate defaultValue={coffee.rating} disabled allowHalf />
-							</Card>
+							<CoffeeCard key={`${coffee.id}_${index}`} coffee={coffee} />
 						))}
 				</div>
-
-				<aside className='cart'>
-					<h1>Заказ</h1>
-					{cart && cart.length > 0 ? (
-						<>
-							{cart.map((item, index) => (
-								<span key={`${item.id}_${index}`}>{item.name}</span>
-							))}
-							<Input
-								placeholder='Адрес'
-								value={address}
-								onChange={(e) => setAddress(e.target.value)}
-							/>
-							<Button type='primary' onClick={orderCoffee} disabled={!address}>
-								Сделать заказ
-							</Button>
-							<Button onClick={clearCart}>Очистить корзину</Button>
-						</>
-					) : (
-						<span>Добавить нипитки</span>
-					)}
-				</aside>
+				<Cart />
 			</div>
 		</div>
 	)
