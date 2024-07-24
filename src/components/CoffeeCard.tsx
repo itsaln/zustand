@@ -1,13 +1,11 @@
 import { Button, Card, Rate, Tag } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 
-import { useCoffeeStore } from '../model/coffeeStore'
+import { addToCart } from '../model/coffeeStore'
 
 import { CoffeeType } from '../types/coffeeTypes'
 
 export const CoffeeCard = ({ coffee }: { coffee: CoffeeType }) => {
-	const { addToCart } = useCoffeeStore()
-
 	return (
 		<Card
 			cover={<img src={coffee.image} alt={coffee.name} />}
