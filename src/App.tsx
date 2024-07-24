@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Button, Card, Input, Rate, Tag } from 'antd'
 import { ShoppingCartOutlined } from '@ant-design/icons'
 
 import { useCoffeeStore } from './model/coffeeStore'
+import { useSearchStore } from './model/searchStore'
 
 import './App.css'
 
 function App() {
-	const [text, setText] = useState('')
-
 	const {
 		getCoffeeList,
 		coffeeList,
@@ -19,11 +18,7 @@ function App() {
 		address,
 		setAddress
 	} = useCoffeeStore()
-
-	const handleSearch = (text: string) => {
-		getCoffeeList({ text })
-		setText(text)
-	}
+	const { text, setText } = useSearchStore()
 
 	useEffect(() => {
 		getCoffeeList()
@@ -34,7 +29,7 @@ function App() {
 			<Input
 				value={text}
 				placeholder='Поиск'
-				onChange={(e) => handleSearch(e.target.value)}
+				onChange={(e) => setText(e.target.value)}
 			/>
 
 			<div style={{ display: 'flex' }}>
